@@ -1,0 +1,173 @@
+{% extends "portfolio/layout.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block body %}
+    <div class="words">
+      <div class="container-fluid">
+          <div class="row">
+            
+            <div class="col-lg-2">
+              <div id="quote-view">
+              <h4>Quote</h4>
+
+              <div class="search-with-icon">
+                <input autocomplete="off" id="quote-input" type="text" name="quote" placeholder="Search">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </div>
+              <button id="quote-button" class="btn btn-secondary btn-sm" type="button">Quote</button>
+
+              <br>
+
+              <div id="quote-block">
+                  <div id="quote-content"></div>
+              </div>
+
+              <hr>
+
+              <h4>Order Entry</h4>
+
+              <input autocomplete="off" id="manual-add-symbol" class="order_entry" type="text" name="manual-add-symbol" placeholder="Ticker">
+              <br>
+              <input autocomplete="off" id="manual-add-price" class="order_entry" type="number" name="manual-add-price" placeholder="Price" min="0" step="0.01">
+              <br>
+              <input autocomplete="off" id="manual-add-position" class="order_entry" type="number" name="manual-add-position" placeholder="Quantity" min="1" step="1">
+              <br>
+              <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
+                <label class="btn btn-outline-success" for="btnradio1">Buy</label>
+              
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                <label class="btn btn-outline-danger" for="btnradio2">Sell</label>            
+              </div>
+              <br>
+              <select name="manual-add-currency" id="manual-add-currency">
+                {% for category in categories %}
+                  <option name="manual-add-currency" value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+              </select>
+              <br>
+              <button id="manual-add-button" class="btn btn-secondary btn-sm" type="button">Submit</button>
+              <div id="manual-add-error"></div>
+              </div>
+            </div>
+            
+            <div class="col-lg-10">
+              <div id="portfolio-view" class="table-responsive">
+                <h4 id="port_label">Portfolio</h4>
+                <button id="refresh-button" class="btn btn-secondary btn-sm" type="button">Refresh</button>
+                <i id="last_refresh_time"></i>
+                <table id="portfolio-table">
+                <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Price</th>
+                      <th>Change (%)</th>
+                      <th>Cost</th>
+                      <th>Position</th>
+                      <th>Market Value</th>
+                      <th>P&L</th>
+                      <th>P&L (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+          </div>
+          
+          <div class="row">
+
+            <div class="col-lg-2">
+              <div id="cash-view" class="table-responsive">  
+                <h4>Cash</h4>
+                <table id="cash-table">
+                  <tr>
+                    <th id="cash-table-item">USD CASH</th>
+                    <td id="cash-table-usd" data-value="{{ usd }}">{{ usd|intcomma }}</td>
+                  </tr>
+                  <tr>
+                    <th id="cash-table-item">HKD CASH</th>
+                    <td id="cash-table-hkd" data-value="{{ hkd }}">{{ hkd|intcomma }}</td>
+                  </tr>
+                  <tr>
+                    <th id="cash-table-item">GBP CASH</th>
+                    <td id="cash-table-gbp" data-value="{{ gbp }}">{{ gbp|intcomma }}</td>
+                  </tr>
+                  <tr>
+                    <th id="cash-table-item">EUR CASH</th>
+                    <td id="cash-table-eur" data-value="{{ eur }}">{{ eur|intcomma }}</td>
+                  </tr>
+                  <tr>
+                    <th id="cash-table-item">TOTAL CASH</th>
+                    <td id="cash-table-total" data-value="{{ total }}">{{ total|intcomma }}</td>
+                  </tr>
+                  <tr>
+                    <th id="cash-table-item">DEFAULT FX</th>
+                    <td id="cash-table-item">
+                      <select name="default-fx" id="default-fx">
+                        {% for default_fx_choice in default_fx_choices %}
+                          {% if default_fx_choice == default_fx_chosen %}
+                            <option name="default-fx" value="{{ category }}" selected>{{ default_fx_choice }}</option>
+                          {% else %}
+                            <option name="default-fx" value="{{ category }}">{{ default_fx_choice }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+                <hr>
+                <h4>Deposit/Withdraw Cash</h4>
+                <input autocomplete="off" id="cash-amount" type="number" name="cash-amount" placeholder="Amount" min="0" step="0.01">
+                <br>
+                <select name="cash-action" id="cash-action">
+                  <option name="cash-action" value="deposit">Deposit</option>
+                  <option name="cash-action" value="withdraw">Withdraw</option>
+                </select>
+                <br>
+                <select name="cash-fx" id="cash-fx">
+                  {% for fx_choice in deposit_withdraw_fx_choices %}
+                    <option name="cash-fx" value="{{ fx_choice }}">{{ fx_choice }}</option>
+                  {% endfor %}
+                </select>
+                <br>
+                <button id="cash-button" class="btn btn-secondary btn-sm" type="button">Submit</button>
+                <div id="cash-error"></div>
+              </div>
+            </div>
+            <div class="col-lg-10">
+              <div id="transactions-view" class="table-responsive">
+                <h4 id="transactions-table-label">Transaction Record</h4>
+                <div class="search-with-icon">
+                  <input autocomplete="off" id="transactions-search-bar" type="text" placeholder="Search transactions...">
+                  <i class="fas fa-search" aria-hidden="true"></i>
+                </div>
+                <table id="transactions-table" class="sortable">
+                  <thead>
+                    <tr>
+                      <th class="trans-heading" id="trans-symbol-heading" data-heading="+1" data-heading_name="Symbol" data-id="trans-symbol-heading">Symbol</th>
+                      <th class="trans-heading" id="trans-transacted-cost-heading" data-heading="+2" data-heading_name="Transacted Cost" data-id="trans-transacted-cost-heading">Transacted Cost</th>
+                      <th class="trans-heading" id="trans-position-heading" data-heading="+3" data-heading_name="Position" data-id="trans-position-heading">Position</th>
+                      <th class="trans-heading" id="trans-currency-heading" data-heading="+4" data-heading_name="Currency" data-id="trans-currency-heading">Currency</th>
+                      <th class="trans-heading" id="trans-transaction-date-heading" data-heading="+5" data-heading_name="Transaction Date" data-id="trans-transaction-date-heading">Transaction Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+          </div>
+      </div>
+    </div>
+    <br>
+    
+{% endblock %}
+
+{% block script %}
+    <script type="module" src="{% static 'portfolio/main.js' %}"></script>
+{% endblock %}

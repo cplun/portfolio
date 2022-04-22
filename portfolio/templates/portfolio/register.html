@@ -1,0 +1,30 @@
+{% extends "portfolio/layout.html" %}
+
+{% block body %}
+<div class="register-view">
+    <h2 id="register-label">Register</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input autocomplete="off" class="form-control" autofocus id="input-box" type="text" name="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control" id="input-box" type="email" name="email" placeholder="Email Address">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control" id="input-box" type="password" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control" id="input-box" type="password" name="confirmation" placeholder="Confirm Password">
+        </div>
+        <input class="btn btn-primary" id="register-button" type="submit" value="Register">
+    </form>
+
+    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+</div>
+{% endblock %}

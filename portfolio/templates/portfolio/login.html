@@ -1,0 +1,24 @@
+{% extends "portfolio/layout.html" %}
+
+{% block body %}
+<div class="login-view">
+    <h2 id="login-label">Login</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input autofocus class="form-control" id="input-box" type="text" name="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input class="form-control" id="input-box" type="password" name="password" placeholder="Password">
+        </div>
+        <input class="btn btn-primary" id="login-button" type="submit" value="Login">
+    </form>
+
+    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+</div>
+{% endblock %}
