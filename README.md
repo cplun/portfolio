@@ -5,11 +5,9 @@ A tracker that enables users to conveniently manage their investments. Users can
 # Distinctiveness and Complexity
 
 This project is sufficiently distinct and complex than other prior projects in CS50 Web course because:
-* It uses API to externally connect website that provides financial data such as stock price (Credit to IEX Cloud). 
-* It requires understanding and integration of the calculation logic behind transactions and portfolio changes. 
-* It creates multiple instant updates on the interface as users enter their orders. 
-
-It has none of the features of a search engine, encyclopedia, ecommerce, mail or social network project. 
+* It uses API to externally connect website that provides financial data such as stock price (Credit to IEX Cloud). In prior projects, we never had to rely on external API to fetch data. However, using external API to fetch data and displaying those data in a format that optimizes the user experience is very common and critical to many websites. Often times, the organization/creator of the website would not have the capability to work on creating the data. In this project, I had to come up with the data I need, look for the vendor that can provide the data I need, think about scalability as my website requires more data in the future, and come up with the right code to display the data, giving the user the best experience. This has never been attempted in prior projects. 
+* It requires understanding and integration of the calculation logic behind transactions and portfolio changes. Displaying the right portfolio data and position changes is challenging because a high degree of accuracy is required. Any error in portfolio changes could lead to direct client financial loss if this is ever applied in the real world. This means it requires a lot of trial and error in testing and inputting numbers, applying different scenarios to assess whether the logic is correct. During the process, it heavily leverages Django's models and database to incorporate the portfolio changes and transactions. This adds a lot of complexity to the project. Given we did not have to account for calculations and logic in prior projects, I would argue that this project is sufficiently distinct. 
+* It creates multiple instant updates on the web interface as users enter their orders. In prior projects, we often use JavaScript to make only 1 update at a time. However, in this project, you will often see multiple instant updates. For example, when you enter an order, transactions will be updated with a new transaction popping up on top of the transaction table. Simultaneously, portfolio data is also instantly updated with the latest portfolio holdings updated to reflect what the users currently hold. This does not only fetch data from Django model database, it also immediately fetches data via the external API. Given the instant updates and data fetching, I would argue that this is more complex and distinct than other prior projects. 
 
 # Features
 
@@ -82,17 +80,11 @@ Javascript for loading portfolio positions, transactions, refreshing portfolio, 
 ### **getcookie.js**
 Javascript for getting cookie for csrftoken for POST request.
 
-### **views.py**
-Python for rendering data in the page including portfolio position, transactions and cash balance, adding stock to portfolio, refreshing portfolio, fetching stock quote, updating cash transactions, updating cash total, changing default currency, updating and rendering realized profit, managing user login, logout and new user registration.   
+### sort.png 
+Icon for sorting transactions
 
-### **models.py**
-Django models depository.
-
-### **urls.py**
-Django url paths depository.
-
-### **admin.py**
-Django Admin site management.
+### **styles.css**
+CSS styling all in this file.
 
 ### **index.html**
 Web structure of the main webpage.
@@ -106,13 +98,54 @@ Login page.
 ### **register.html**
 Allowing new user to register.
 
-### **styles.css**
-CSS styling all in this file.
+### **views.py**
+Python for rendering data in the page including portfolio position, transactions and cash balance, adding stock to portfolio, refreshing portfolio, fetching stock quote, updating cash transactions, updating cash total, changing default currency, updating and rendering realized profit, managing user login, logout and new user registration.   
+
+### **models.py**
+Django models depository.
+
+### **urls.py (under Portfolio folder)**
+Django url paths depository.
+
+### **admin.py**
+Django Admin site management. Registering different models in admin site. 
+
+### **app.py**
+Portfolio configuration
+
+### **tests.py**
+For testing different cases and scenarios. Currently left blank. 
+
+### **__init__.py**
+For initiation purpose
+
+### **0001_initial.py**
+Initial model migration
+
+### **manage.py**
+For running Django administrative tasks.
+
+### **db.sqlite3**
+Database for storing model data
+
+### **settings.py**
+Project settings. Slightly updated to incorporate numbers humanization. 
+
+### **urls.py (under Capstone folder)**
+URLs of the whole project, with the URLs of the admin site and the project itself. 
+
+### **asgi.py**
+Asynchronous Server Gateway Interface to provide a standard interface between async-capable Python web servers, frameworks, and applications
+
+### **wsgi.py**
+Web Server Gateway Interface for web servers to forward requests to web applications or frameworks written in the Python 
 
 # How to Run the Webpage 
 1. Go to Terminal
-2. Go to the capstone folder
-3. Type python manage.py runserver or python3 manage.py runserver
+2. Navigate to the capstone folder
+3. Initialize database by file migrations, type python3 manage.py makemigrations and then python3 manage.py migrate
+4. Create a superuser for admin purpose, python3 manage.py createsuperuser
+3. Type python3 manage.py runserver
 4. Paste http://127.0.0.1:8000 in your browser
 
 # Technology
