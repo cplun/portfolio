@@ -10,6 +10,7 @@ urlpatterns = [
     path("add_stock/<str:symbol>", views.add_stock, name="add_stock"),
     path("cash", views.cash, name="cash"),
     path("change_default_fx", views.change_default_fx, name="change_default_fx"),
+    path("total_cash", views.total_cash, name="total_cash"),
     path("last_transaction", views.last_transaction, name="last_transaction"),
     path("check_stock/<str:symbol>", views.check_stock, name="check_stock"),
     path("portfolio_position", views.portfolio_position, name="portfolio_position"),

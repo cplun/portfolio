@@ -563,8 +563,6 @@ function cash_action() {
   let get_action = action_list.options[action_list.selectedIndex].text;
   let currency_list = document.querySelector('#cash-fx');
   let get_fx = currency_list.options[currency_list.selectedIndex].text;
-  let default_fx_list = document.querySelector('#default-fx');
-  let default_fx = default_fx_list.options[default_fx_list.selectedIndex].text;
 
   // Update cash based on input
   fetch('/cash', {
@@ -588,7 +586,7 @@ function cash_action() {
     document.querySelector(`#cash-table-${fx}`).dataset.value = updated_fx_amount;
     document.querySelector(`#cash-table-${fx}`).innerHTML = updated_fx_amount.toLocaleString();
     // Change default total FX value
-    update_total_cash(default_fx);
+    update_total_cash();
   })
   .then(() => {
     // Add cash change to Transaction Record
@@ -628,7 +626,7 @@ function default_fx() {
   })
   .then(() => {    
     // Load the right total cash amount based on the default FX chosen
-    update_total_cash(get_fx);
+    update_total_cash();
   })
 
 }
@@ -639,10 +637,6 @@ function update_cash(get_fx, get_cost, get_position) {
   // Get the cash amount change after adding or reducing stock position
   let get_amount = get_cost * get_position * (-1);
 
-  // Get the current default FX for calculating the new Total Cash after change
-  let default_fx_list = document.querySelector('#default-fx');
-  let default_fx = default_fx_list.options[default_fx_list.selectedIndex].text;
-
   // Change value of FX change 
   let fx = get_fx.toLowerCase();
   let updated_fx_amount = parseInt(document.querySelector(`#cash-table-${fx}`).dataset.value) + parseInt(get_amount);
@@ -650,55 +644,20 @@ function update_cash(get_fx, get_cost, get_position) {
   document.querySelector(`#cash-table-${fx}`).innerHTML = updated_fx_amount.toLocaleString();
 
   // Change default total FX value
-  update_total_cash(default_fx);
+  update_total_cash();
 
 }
 
 
-function update_total_cash(default_fx) {
-
-  // Exchange Rate Assumption (API to be used in further development) - rate as of 20 Feb
-  let usdhkd = parseFloat(7.8).toFixed(3);
-  let gbpusd = parseFloat(1.36).toFixed(3);
-  let eurusd = parseFloat(1.13).toFixed(3);
-  let gbphkd = parseFloat(10.6).toFixed(3);
-  let eurhkd = parseFloat(8.83).toFixed(3);
-  let gbpeur = parseFloat(1.2).toFixed(3);
+function update_total_cash() {
   
-  // Update total cash based on default FX chosen
-  if (default_fx === "USD") {
-    let usd = document.querySelector('#cash-table-usd').dataset.value;
-    let hkd = document.querySelector('#cash-table-hkd').dataset.value / usdhkd;
-    let gbp = document.querySelector('#cash-table-gbp').dataset.value * gbpusd;
-    let eur = document.querySelector('#cash-table-eur').dataset.value * eurusd; 
-    let updated_cash_amount = parseFloat(usd) + parseFloat(hkd) + parseFloat(gbp) + parseFloat(eur);
-    document.querySelector('#cash-table-total').innerHTML = parseInt(updated_cash_amount).toLocaleString();
-    default_fx = "USD";
-  } else if (default_fx === "HKD") {
-    let usd = document.querySelector('#cash-table-usd').dataset.value * usdhkd;
-    let hkd = document.querySelector('#cash-table-hkd').dataset.value;
-    let gbp = document.querySelector('#cash-table-gbp').dataset.value * gbphkd;
-    let eur = document.querySelector('#cash-table-eur').dataset.value * eurhkd; 
-    let updated_cash_amount = parseFloat(usd) + parseFloat(hkd) + parseFloat(gbp) + parseFloat(eur);
-    document.querySelector('#cash-table-total').innerHTML = parseInt(updated_cash_amount).toLocaleString();
-    default_fx = "HKD";
-  } else if (default_fx === "GBP") {
-    let usd = document.querySelector('#cash-table-usd').dataset.value / gbpusd;
-    let hkd = document.querySelector('#cash-table-hkd').dataset.value / gbphkd;
-    let gbp = document.querySelector('#cash-table-gbp').dataset.value;
-    let eur = document.querySelector('#cash-table-eur').dataset.value / gbpeur; 
-    let updated_cash_amount = parseFloat(usd) + parseFloat(hkd) + parseFloat(gbp) + parseFloat(eur);
-    document.querySelector('#cash-table-total').innerHTML = parseInt(updated_cash_amount).toLocaleString();
-    default_fx = "GBP";
-  } else if (default_fx === "EUR") {
-    let usd = document.querySelector('#cash-table-usd').dataset.value / eurusd;
-    let hkd = document.querySelector('#cash-table-hkd').dataset.value / eurhkd;
-    let gbp = document.querySelector('#cash-table-gbp').dataset.value * gbpeur;
-    let eur = document.querySelector('#cash-table-eur').dataset.value; 
-    let updated_cash_amount = parseFloat(usd) + parseFloat(hkd) + parseFloat(gbp) + parseFloat(eur);
-    document.querySelector('#cash-table-total').innerHTML = parseInt(updated_cash_amount).toLocaleString();
-    default_fx = "EUR";
-  }
+  // Load total cash
+  fetch("/total_cash")
+  .then(response => response.json())
+  .then(cash => {
+    document.querySelector('#cash-table-total').innerHTML = parseInt(cash.total_cash).toLocaleString();
+  })
+ 
 }
 
 
@@ -719,6 +678,10 @@ function refresh() {
   .then(() => {
     // Refresh portfolio positions
     reload_portfolio_position();
+  })
+  .then(() => {
+    // Update total cash
+    update_total_cash();
   })
   .then(() => {
     // Update refresh time and realized profit

@@ -211,7 +211,7 @@ def add_stock(request, symbol):
         cash.save()
 
         # Based on the default FX choice, update total cash
-        update_total_cash(request.user, cash.default_fx_choice)
+        update_total_cash(request.user)
 
         return HttpResponseRedirect(reverse("index"))
     
@@ -263,7 +263,7 @@ def cash(request):
         cash.save()
         
         # Based on the default FX choice, update total cash
-        update_total_cash(request.user, cash.default_fx_choice)
+        update_total_cash(request.user)
         
         # Add transaction
         add_transaction = Transaction.objects.create(
@@ -297,7 +297,7 @@ def change_default_fx(request):
         cash.save()
 
         # Based on the default FX choice, update total cash
-        update_total_cash(request.user, cash_fx)
+        update_total_cash(request.user)
 
         return HttpResponseRedirect(reverse("index"))
 
@@ -307,44 +307,41 @@ def change_default_fx(request):
         }, status=400)
 
 
-def update_total_cash(requested_user, default_fx_choice):
+def update_total_cash(requested_user):
 
-    # Exchange Rate Assumption (API to be can be used later) - rate as of 20 Feb
-    usdhkd = Decimal(7.8)
-    gbpusd = Decimal(1.36)
-    eurusd = Decimal(1.13)
-    gbphkd = Decimal(10.6)
-    eurhkd = Decimal(8.83)
-    gbpeur = Decimal(1.2)
-
+    # Get existing cash balance of different currencies
     cash = Cash.objects.get(owner=requested_user)
+    usd_pos = cash.usd
+    hkd_pos = cash.hkd
+    gbp_pos = cash.gbp
+    eur_pos = cash.eur
+    
+    # Refresh total cash based on latest fx rates via external API
+    url = 'https://api.exchangerate.host/latest'
+    base = cash.default_fx_choice
+    response = requests.get(url, params = {"base": base}).json()
+    rates = response['rates']
+    usd_rate = Decimal(rates['USD'])
+    hkd_rate = Decimal(rates['HKD'])
+    gbp_rate = Decimal(rates['GBP'])
+    eur_rate = Decimal(rates['EUR'])
 
-    # Based on the default FX choice, update total cash
-    if default_fx_choice == "USD":
-        usd = Decimal(cash.usd)
-        hkd_to_usd = Decimal(cash.hkd) / usdhkd
-        gbp_to_usd = Decimal(cash.gbp) * gbpusd
-        eur_to_usd = Decimal(cash.eur) * eurusd
-        cash.total_cash = usd + hkd_to_usd + gbp_to_usd + eur_to_usd
-    elif default_fx_choice == "HKD":
-        hkd = Decimal(cash.hkd)
-        usd_to_hkd = Decimal(cash.usd) * usdhkd
-        gbp_to_hkd = Decimal(cash.gbp) * gbphkd
-        eur_to_hkd = Decimal(cash.eur) * eurhkd
-        cash.total_cash = hkd + usd_to_hkd + gbp_to_hkd + eur_to_hkd
-    elif default_fx_choice == "GBP":
-        gbp = Decimal(cash.gbp)
-        usd_to_gbp = Decimal(cash.usd) / gbpusd
-        hkd_to_gbp = Decimal(cash.hkd) / gbphkd
-        eur_to_gbp = Decimal(cash.eur) / gbpeur
-        cash.total_cash = gbp + usd_to_gbp + hkd_to_gbp + eur_to_gbp
-    elif default_fx_choice == "EUR":
-        eur = Decimal(cash.eur)
-        usd_to_eur = Decimal(cash.usd) / eurusd
-        hkd_to_eur = Decimal(cash.hkd) / eurhkd
-        gbp_to_eur = Decimal(cash.gbp) * gbpeur
-        cash.total_cash = eur + usd_to_eur + hkd_to_eur + gbp_to_eur
+    cash.total_cash = (usd_pos / usd_rate) + (hkd_pos / hkd_rate) + (gbp_pos / gbp_rate) + (eur_pos / eur_rate)
+
     cash.save()
+    return HttpResponseRedirect(reverse("index"))
+
+
+@login_required(login_url='login')
+def total_cash(request):
+    if request.method == "GET":
+        # Load total cash
+        total_cash = Cash.objects.get(owner=request.user).total_cash
+        return JsonResponse({"total_cash": int(total_cash)}, status=200)
+    else:
+        return JsonResponse({
+            "error": "GET request required."
+        }, status=400)
 
 
 @login_required(login_url='login')
@@ -473,6 +470,10 @@ def refresh(request):
             holding.pnl = ((refreshed_price - holding.cost) * holding.position)
             holding.pnl_percent = ((refreshed_price - holding.cost) / holding.cost)
             holding.save()
+        
+        # Based on the default FX choice, update total cash
+        update_total_cash(request.user)
+
         return HttpResponseRedirect(reverse("index"))
 
     else:

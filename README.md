@@ -2,6 +2,10 @@
 
 A tracker that enables users to conveniently manage their investments. Users can quote stock price, enter orders as they make investments, track their portfolio, transaction record, monitor cash level as they deposit/withdraw cash or invest. 
 
+**YouTube Demo**
+
+[![YouTube Demo](https://img.youtube.com/vi/GZkPI1YJx1c/default.jpg)](https://youtu.be/GZkPI1YJx1c)
+
 # Distinctiveness and Complexity
 
 This project is sufficiently distinct and complex than other prior projects in CS50 Web course because:
