@@ -1,16 +1,14 @@
-import json, requests, datetime
+import json, requests, finnhub
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.core import serializers
 from django.utils import timezone
-from django.db.models import Avg, Count, Sum, F, ExpressionWrapper, DecimalField, Q, Case, Value, When
+from django.db.models import F
 from decimal import Decimal
-from datetime import datetime
 
 from .models import User, Transaction, Portfolio, Cash, Refresh, Realized_Profit, Temporary
 
@@ -62,14 +60,14 @@ def index(request):
 def quote(request, symbol):
     if request.method == "GET":
         try:
-            # Quoting stock details through IEX API
-            api_key = "pk_eedfeddf0a1a401abab05be8df0d25ed"
-            url = f"https://cloud.iexapis.com/stable/stock/{symbol}/quote?token={api_key}"
-            response = requests.get(url).json()
+            # Quoting stock details through Finnhub API
+            finnhub_client = finnhub.Client(api_key="c7nuioqad3idf06mjrtg")
+            quote = finnhub_client.quote(symbol)
+            company_profile = finnhub_client.company_profile2(symbol=symbol)
             return JsonResponse({
-                "name": response["companyName"],
-                "symbol": response["symbol"],
-                "price": response["latestPrice"],
+                "name": company_profile["name"],
+                "symbol": company_profile["ticker"],
+                "price": quote["c"],
             }, status=200)
         except:
             return JsonResponse({"error": "Invalid Stock/API."}, status=404)
@@ -105,11 +103,11 @@ def add_stock(request, symbol):
         # Stock symbol validation: reject if symbol not found
         # If valid, save price and price change data 
         try:
-            api_key = "pk_eedfeddf0a1a401abab05be8df0d25ed"
-            url = f"https://cloud.iexapis.com/stable/stock/{symbol}/quote?token={api_key}"
-            response = requests.get(url).json()
-            price = float(response["latestPrice"])
-            change = float(response["changePercent"])
+            # Quoting stock details through Finnhub API
+            finnhub_client = finnhub.Client(api_key="c7nuioqad3idf06mjrtg")
+            quote = finnhub_client.quote(symbol)
+            price = float(quote["c"])
+            change = float(quote["dp"]/100)
         except:
             return JsonResponse({"error": "Invalid Stock/API."}, status=404)
 
@@ -456,15 +454,14 @@ def refresh(request):
             portfolio = Portfolio.objects.filter(owner=request.user)
         except: 
             return JsonResponse({"error": "Please create portfolio first."}, status=404)
-        
-        api_key = "pk_eedfeddf0a1a401abab05be8df0d25ed"
 
         # Refresh portfolio position details
         for holding in portfolio:
-            url = f"https://cloud.iexapis.com/stable/stock/{holding.symbol}/quote?token={api_key}"
-            response = requests.get(url).json()
-            refreshed_price = Decimal(response["latestPrice"])
-            refreshed_change = Decimal(response["changePercent"])
+            # Quoting stock details through Finnhub API
+            finnhub_client = finnhub.Client(api_key="c7nuioqad3idf06mjrtg")
+            quote = finnhub_client.quote(holding.symbol)
+            refreshed_price = Decimal(quote["c"])
+            refreshed_change = Decimal(quote["dp"]/100)
             holding.price = refreshed_price
             holding.change = refreshed_change
             holding.pnl = ((refreshed_price - holding.cost) * holding.position)

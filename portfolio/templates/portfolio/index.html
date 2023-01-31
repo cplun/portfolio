@@ -35,10 +35,10 @@
               <br>
               <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
-                <label class="btn btn-outline-success" for="btnradio1">Buy</label>
+                <label class="btn btn-outline-success" for="btnradio1" id="buy_label">Buy</label>
               
                 <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                <label class="btn btn-outline-danger" for="btnradio2">Sell</label>            
+                <label class="btn btn-outline-danger" for="btnradio2" id="sell_label">Sell</label>            
               </div>
               <br>
               <select name="manual-add-currency" id="manual-add-currency">
@@ -60,14 +60,14 @@
                 <table id="portfolio-table">
                 <thead>
                     <tr>
-                      <th>Symbol</th>
-                      <th>Price</th>
-                      <th>Change (%)</th>
-                      <th>Cost</th>
-                      <th>Position</th>
-                      <th>Market Value</th>
-                      <th>P&L</th>
-                      <th>P&L (%)</th>
+                      <th id="port-symbol-heading">Symbol</th>
+                      <th id="port-price-heading">Price</th>
+                      <th id="port-change-heading">Change (%)</th>
+                      <th id="port-cost-heading">Cost</th>
+                      <th id="port-position-heading">Position</th>
+                      <th id="port-mv-heading">Market Value</th>
+                      <th id="port-pnl-heading">P&L</th>
+                      <th id="port-pnl-percent-heading">P&L (%)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -110,9 +110,9 @@
                       <select name="default-fx" id="default-fx">
                         {% for default_fx_choice in default_fx_choices %}
                           {% if default_fx_choice == default_fx_chosen %}
-                            <option name="default-fx" value="{{ category }}" selected>{{ default_fx_choice }}</option>
+                            <option name="default-fx" value="{{ default_fx_choice }}" selected>{{ default_fx_choice }}</option>
                           {% else %}
-                            <option name="default-fx" value="{{ category }}">{{ default_fx_choice }}</option>
+                            <option name="default-fx" value="{{ default_fx_choice }}">{{ default_fx_choice }}</option>
                           {% endif %}
                         {% endfor %}
                       </select>

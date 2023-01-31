@@ -337,9 +337,11 @@ function render_realized_profit() {
     }
     rz_profit_row.cells[0].innerHTML = "Realized P&L";
     rz_profit_row.cells[0].style.fontWeight = "bold"; 
-    rz_profit_row.cells[6].innerHTML = parseFloat(realized_profit.realized_profit).toLocaleString(undefined, {maximumFractionDigits: 1});
+    rz_profit_row.cells[6].id = "realized_profit_total";
+    rz_profit_row.cells[6].innerHTML = parseFloat(realized_profit.realized_profit).toLocaleString(undefined, {maximumFractionDigits: 0});
     rz_profit_row.cells[6].style.fontWeight = "bold"; 
   })
+
 }
 
 
@@ -361,14 +363,22 @@ function load_portfolio_position() {
         mv_count += mv;
         // Add up each stock's P&L to total P&L
         pnl_count += parseFloat(position["pnl"]);
-        table.rows[1].insertCell().innerHTML = position["symbol"];
-        table.rows[1].insertCell().innerHTML = parseFloat(position["price"]).toLocaleString();
-        table.rows[1].insertCell().innerHTML = parseFloat(position["change"]*100).toFixed(2)+"%";
-        table.rows[1].insertCell().innerHTML = parseFloat(position["cost"]).toLocaleString();
-        table.rows[1].insertCell().innerHTML = parseInt(position["position"]).toLocaleString();
-        table.rows[1].insertCell().innerHTML = mv.toLocaleString();
-        table.rows[1].insertCell().innerHTML = parseFloat(position["pnl"]).toLocaleString();
-        table.rows[1].insertCell().innerHTML = parseFloat(position["pnl_percent"]*100).toFixed(2)+"%";
+        table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_symbol`;
+        document.getElementById(`portfolio_row_${position.symbol}_symbol`).innerHTML = position["symbol"];
+        table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_price`;
+        document.getElementById(`portfolio_row_${position.symbol}_price`).innerHTML = parseFloat(position["price"]).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_change`;
+        document.getElementById(`portfolio_row_${position.symbol}_change`).innerHTML = parseFloat(position["change"]*100).toFixed(2)+"%";
+        table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_cost`;
+        document.getElementById(`portfolio_row_${position.symbol}_cost`).innerHTML = parseFloat(position["cost"]).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_position`;
+        document.getElementById(`portfolio_row_${position.symbol}_position`).innerHTML = parseInt(position["position"]).toLocaleString(undefined, {maximumFractionDigits: 0});
+        table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_mv`;
+        document.getElementById(`portfolio_row_${position.symbol}_mv`).innerHTML = mv.toLocaleString(undefined, {maximumFractionDigits: 0});
+        table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_pnl`;
+        document.getElementById(`portfolio_row_${position.symbol}_pnl`).innerHTML = parseInt(position["pnl"]).toLocaleString(undefined, {maximumFractionDigits: 0});
+        table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_pnl_percent`;
+        document.getElementById(`portfolio_row_${position.symbol}_pnl_percent`).innerHTML = parseFloat(position["pnl_percent"]*100).toFixed(2)+"%";
       });
       
       // Load Portfolio Total Market Value, P&L and P&L%
@@ -380,11 +390,18 @@ function load_portfolio_position() {
       }
       port_total_row.cells[0].innerHTML = "Total";
       port_total_row.cells[0].style.fontWeight = "bold"; 
-      port_total_row.cells[5].innerHTML = mv_count.toLocaleString();
+      port_total_row.cells[5].id = "total_mv";
+      port_total_row.cells[5].innerHTML = mv_count.toLocaleString(undefined, {maximumFractionDigits: 0});
       port_total_row.cells[5].style.fontWeight = "bold"; 
-      port_total_row.cells[6].innerHTML = pnl_count.toLocaleString();
+      port_total_row.cells[6].id = "total_pnl";
+      port_total_row.cells[6].innerHTML = pnl_count.toLocaleString(undefined, {maximumFractionDigits: 0});
       port_total_row.cells[6].style.fontWeight = "bold"; 
-      port_total_row.cells[7].innerHTML = parseFloat(pnl_count/mv_count*100).toFixed(2)+"%";
+      port_total_row.cells[7].id = "total_pnl_percent";
+      if (isNaN((mv_count/(mv_count - pnl_count)-1)*100)) {
+        port_total_row.cells[7].innerHTML = "0%";
+      } else {
+        port_total_row.cells[7].innerHTML = parseFloat((mv_count/(mv_count - pnl_count)-1)*100).toFixed(2)+"%";
+      }
       port_total_row.cells[7].style.fontWeight = "bold"; 
 
       // Load realized profit
@@ -415,14 +432,22 @@ function reload_portfolio_position() {
       mv_count += mv;
       // Add up each stock's P&L to total P&L
       pnl_count += parseFloat(position["pnl"]);
-      table.rows[1].insertCell().innerHTML = position["symbol"];
-      table.rows[1].insertCell().innerHTML = parseFloat(position["price"]).toLocaleString();
-      table.rows[1].insertCell().innerHTML = parseFloat(position["change"]*100).toFixed(2)+"%";
-      table.rows[1].insertCell().innerHTML = parseFloat(position["cost"]).toLocaleString();
-      table.rows[1].insertCell().innerHTML = parseInt(position["position"]).toLocaleString();
-      table.rows[1].insertCell().innerHTML = mv.toLocaleString();
-      table.rows[1].insertCell().innerHTML = parseFloat(position["pnl"]).toLocaleString();
-      table.rows[1].insertCell().innerHTML = parseFloat(position["pnl_percent"]*100).toFixed(2)+"%";
+      table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_symbol`;
+      document.getElementById(`portfolio_row_${position.symbol}_symbol`).innerHTML = position["symbol"];
+      table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_price`;
+      document.getElementById(`portfolio_row_${position.symbol}_price`).innerHTML = parseFloat(position["price"]).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_change`;
+      document.getElementById(`portfolio_row_${position.symbol}_change`).innerHTML = parseFloat(position["change"]*100).toFixed(2)+"%";
+      table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_cost`;
+      document.getElementById(`portfolio_row_${position.symbol}_cost`).innerHTML = parseFloat(position["cost"]).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_position`;
+      document.getElementById(`portfolio_row_${position.symbol}_position`).innerHTML = parseInt(position["position"]).toLocaleString(undefined, {maximumFractionDigits: 0});
+      table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_mv`;
+      document.getElementById(`portfolio_row_${position.symbol}_mv`).innerHTML = mv.toLocaleString(undefined, {maximumFractionDigits: 0});
+      table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_pnl`;
+      document.getElementById(`portfolio_row_${position.symbol}_pnl`).innerHTML = parseInt(position["pnl"]).toLocaleString(undefined, {maximumFractionDigits: 0});
+      table.rows[1].insertCell().id = `portfolio_row_${position.symbol}_pnl_percent`;
+      document.getElementById(`portfolio_row_${position.symbol}_pnl_percent`).innerHTML = parseFloat(position["pnl_percent"]*100).toFixed(2)+"%";
     });
 
     // Load Portfolio Total Market Value, P&L and P&L%
@@ -434,11 +459,18 @@ function reload_portfolio_position() {
     }
     port_total_row.cells[0].innerHTML = "Total";
     port_total_row.cells[0].style.fontWeight = "bold"; 
-    port_total_row.cells[5].innerHTML = mv_count.toLocaleString();
+    port_total_row.cells[5].id = "total_mv";
+    port_total_row.cells[5].innerHTML = mv_count.toLocaleString(undefined, {maximumFractionDigits: 0});
     port_total_row.cells[5].style.fontWeight = "bold"; 
-    port_total_row.cells[6].innerHTML = pnl_count.toLocaleString();
+    port_total_row.cells[6].id = "total_pnl";
+    port_total_row.cells[6].innerHTML = pnl_count.toLocaleString(undefined, {maximumFractionDigits: 0});
     port_total_row.cells[6].style.fontWeight = "bold"; 
-    port_total_row.cells[7].innerHTML = parseFloat(pnl_count/mv_count*100).toFixed(2)+"%";
+    port_total_row.cells[7].id = "total_pnl_percent";
+    if (isNaN((mv_count/(mv_count - pnl_count)-1)*100)) {
+      port_total_row.cells[7].innerHTML = "0%";
+    } else {
+      port_total_row.cells[7].innerHTML = parseFloat((mv_count/(mv_count - pnl_count)-1)*100).toFixed(2)+"%";
+    }
     port_total_row.cells[7].style.fontWeight = "bold"; 
   })
 }

@@ -34,6 +34,12 @@ class Transaction(models.Model):
             "timestamp": self.timestamp.strftime("%b. %e, %Y, %I:%M %p"),
         }
 
+    def is_valid_transaction(self):
+        # For unit testing purpose
+        cost_val = (self.cost > 0)
+        currency_val = (self.currency in ["USD", "HKD", "GBP", "EUR"])
+        return cost_val and currency_val
+
 
 class Portfolio(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -70,6 +76,15 @@ class Portfolio(models.Model):
             "pnl_percent": self.pnl_percent,
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
         }
+    
+    def is_valid_holding(self):
+        # For unit testing purpose
+        price_val = (self.price > 0)
+        cost_val = (self.cost > 0)
+        currency_val = (self.currency in ["USD", "HKD", "GBP", "EUR"])
+        pnl_val = (self.pnl == (self.price - self.cost) * self.position)
+        pnl_percent_val = (self.pnl_percent == (self.price / self.cost - 1))
+        return price_val and cost_val and currency_val and pnl_val and pnl_percent_val
 
 
 class Cash(models.Model):
