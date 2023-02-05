@@ -27,7 +27,19 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '35esgq&vvxm-p+93#@i5^m(nms)_r7
 # DEBUG = True
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = []
+
+# For example, for a site URL at 'portfolio-production-c24e.up.railway.app'
+# (replace the string below with own site URL):
+ALLOWED_HOSTS = ['portfolio-production-c24e.up.railway.app', '127.0.0.1']
+# During development, can set just the base URL:
+# ALLOWED_HOSTS = ['.railway.com','127.0.0.1']
+
+
+## For example, for a site URL is at 'portfolio-production-c24e.up.railway.app'
+## (replace the string below with your own site URL):
+CSRF_TRUSTED_ORIGINS = ['portfolio-production-c24e.up.railway.app']
+# During development, can instead set just the base URL
+# CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
 
 
 # Application definition
