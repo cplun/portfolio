@@ -24,8 +24,8 @@ import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '35esgq&vvxm-p+93#@i5^m(nms)_r7so^h03jjib6_+^j0cx_p')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+# DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 
 # For example, for a site URL at 'portfolio.bc.up.railway.app'
@@ -147,10 +147,9 @@ DATABASES['default'].update(db_from_env)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 # The absolute path to the directory where collectstatic will collect static files for deployment.
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'  #. os.path.join(BASE_DIR, 'staticfiles')
 # The URL to use when referring to static files (where they will be served from)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Static file serving.
 # http://whitenoise.evans.io/en/stable/django.html#django-middleware
