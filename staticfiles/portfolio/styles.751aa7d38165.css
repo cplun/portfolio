@@ -1,0 +1,238 @@
+body {
+    background-color: black;
+}
+
+hr {
+    color: white;
+    border-style: solid;
+}
+
+.words {
+    color: white;
+    background-color: #1a1a1a; 
+    font-family: "Garamond";
+}
+
+.login-view, .register-view {
+    color: white;
+    background-color: black; 
+    font-family: "Garamond";
+    text-align: center;
+    align-items: center;
+    width: 20%;
+    margin: auto;
+}
+
+#login-button, #login-label, #register-button, #register-label {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#input-box {
+    background: transparent;
+    color: white;
+}
+
+#input-box::placeholder {
+    color: lightgrey;
+}
+
+.col-lg-2, .col-lg-10 {
+    color: white;
+    border-style: groove;
+    border-left-width: 0.1px;
+    border-right-width: 0.1px;
+    border-top-width: 0.1px;
+    border-bottom-width: 0.1px;
+    max-height: 65vh;
+    overflow: auto;
+}
+
+.navbar-brand {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+input[type=text]:focus, input[type=number]:focus {
+    border-color: rgb(146, 146, 146);
+    box-shadow: 0 0 8px 0 rgb(146, 146, 146);
+}
+
+.search-with-icon input[type=text] {
+    padding-left: 40px;
+    width: 100%;
+}
+
+#transactions-search-bar {
+    width: 220px;
+    margin-bottom: 5px;
+}
+
+.search-with-icon {
+    position: relative;
+}
+
+.search-with-icon i {
+    position: absolute;
+    left: 0;
+    padding: 9px 8px;
+    color: #aaa;
+}
+
+.search-with-icon input[type=text]:focus + i {
+    color: dodgerblue;
+}
+
+#quote-button {
+    margin-top: 10px;
+}
+
+#quote-view {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#quote-content {
+    text-align: center;
+}
+
+#portfolio-view {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#portfolio-table {
+    width: 100%;
+}
+
+#cash-table {
+    width: 100%;
+    table-layout: fixed;
+    text-align: left;
+}
+
+#cash-table-item {
+    text-align: left;
+}
+
+#cash-table-usd, #cash-table-hkd, #cash-table-gbp, #cash-table-eur, #cash-table-total {
+    text-align: left;
+}
+
+#cash-view {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#transactions-view {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#transactions-table {
+    width: 100%;
+}
+
+th, td {
+    text-align: center;
+}
+
+tbody tr:hover, tr>th:hover {
+    background-color: white;
+    color: black;
+}
+
+#transactions-table th:hover {
+    cursor: pointer;
+}
+
+#quote-block {
+    display: none;
+}
+
+#manual-add-symbol {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#manual-add-price {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#manual-add-position {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#manual-add-currency {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#manual-add-time {
+    margin-bottom: 10px;
+}
+
+#cash-amount {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#cash-action {
+    margin-bottom: 10px;
+}
+
+#cash-fx {
+    margin-bottom: 10px;
+}
+
+#port_label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#refresh-button {
+    display: inline-block;
+    margin-left: 15px;
+    margin-right: 15px;
+    vertical-align: middle;
+}
+
+#last_refresh_time {
+    margin-top: 5px;
+}
+
+#portfolio_total {
+    border-top: 0.01px groove rgb(255, 255, 255);
+}
+
+.alert {
+    padding:5px 0px 5px 0px;
+    margin-top: 10px;
+}
+
+#manual-add-error {
+    text-align: center;
+}
+
+#sort-icon {
+    width: 10%;
+    transform: rotate(180deg);
+}
