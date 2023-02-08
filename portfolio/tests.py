@@ -147,7 +147,7 @@ class ServerSideTests(TestCase):
 def get_datetime_now():
     # This function is used in Client Side Testing's test_deposit_withdraw function to format date for asserting transaction time in transaction record 
     now = datetime.now()
-    dt_string = now.strftime("%b. %d, %Y, %I:%M %p")
+    dt_string = now.strftime("%b. %-d, %Y, %I:%M %p")
     return dt_string
 
 
