@@ -1,19 +1,12 @@
-# Portfolio
+# Portfolio Tracker
 
 An investment portfolio dashboard that enables users to conveniently manage their investments. Users can quote stock price, enter orders to trade, track their investment holdings, trades and transactions record, monitor cash balance as they deposit/withdraw cash and invest. 
 
-# Link
-
-https://portfolio.bc.up.railway.app
+![Portfolio](./portfolio.png)
 
 # YouTube Demo
 
 [![YouTube Demo](https://img.youtube.com/vi/GZkPI1YJx1c/default.jpg)](https://youtu.be/GZkPI1YJx1c)
-
-# Instruction for First-Time User
-1. Click on the link shown in the Link section.
-2. Register for a new account.
-3. Start managing your investment portfolio!
 
 # Technology
 
@@ -83,3 +76,8 @@ The page is mobile responsive. The screen will adjust according to the user's wi
 
 ## **Validations**
 Entries in Quote, Order Entry and Deposit/Withdraw Cash will need to pass client side and server side validations in order to update the record permanently. 
+
+# Instruction for First-Time User
+1. Click on the link shown in the Link section.
+2. Register for a new account.
+3. Start managing your investment portfolio!
